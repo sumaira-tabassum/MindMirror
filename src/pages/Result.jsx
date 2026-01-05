@@ -1,22 +1,31 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import Navbar from "../components/layout/Navbar";
-import { useNavigate } from "react-router-dom";
-import { useLocation } from "react-router-dom";
+import { useNavigate, useLocation } from "react-router-dom";
 
 export default function Results() {
   const navigate = useNavigate();
-const location = useLocation();
+  const location = useLocation();
 
-const [results, setResults] = useState(
-  location.state?.comparisonResult? [location.state.comparisonResult] :[]
-)
+  // Initialize results state (handle array or single object)
+  const initialResults = Array.isArray(location.state?.comparisonResult)
+    ? location.state.comparisonResult
+    : location.state?.comparisonResult
+      ? [location.state.comparisonResult]
+      : [];
 
+  const [results, setResults] = useState(initialResults);
+
+  // Badge color mapping
   const getBadgeColor = (color) => {
     switch (color) {
-      case "red": return "bg-red-100 dark:bg-red-900/50 text-red-700 dark:text-red-300";
-      case "amber": return "bg-amber-100 dark:bg-amber-900/50 text-amber-800 dark:text-amber-300";
-      case "green": return "bg-green-100 dark:bg-green-900/50 text-green-800 dark:text-green-300";
-      default: return "";
+      case "red":
+        return "bg-red-100 dark:bg-red-900/50 text-red-700 dark:text-red-300";
+      case "amber":
+        return "bg-amber-100 dark:bg-amber-900/50 text-amber-800 dark:text-amber-300";
+      case "green":
+        return "bg-green-100 dark:bg-green-900/50 text-green-800 dark:text-green-300";
+      default:
+        return "";
     }
   };
 
@@ -35,7 +44,7 @@ const [results, setResults] = useState(
 
   return (
     <div className="flex flex-col min-h-screen bg-background-light dark:bg-background-dark text-text-light dark:text-text-dark">
-      <Navbar toggleSidebar={() => {}} />
+      <Navbar toggleSidebar={() => { }} />
 
       {/* Top buttons */}
       <div className="flex justify-between items-center px-6 pt-2">
@@ -77,13 +86,17 @@ const [results, setResults] = useState(
                     <tr key={idx}>
                       <td className="whitespace-nowrap py-4 pl-6 pr-3 text-sm font-medium">{res.pair}</td>
                       <td className="whitespace-nowrap px-3 py-4 text-sm">
-                        {res.score !== null && (
+                        {res.score !== undefined && res.score !== null ? (
                           <span className={`inline-flex items-center justify-center rounded-full px-3 py-1 font-medium ${getBadgeColor(res.color)}`}>
-                            {res.score}%
+                            {res.score.toFixed(2)}%
                           </span>
+                        ) : (
+                          <span className="text-gray-500">N/A</span>
                         )}
                       </td>
-                      <td className="whitespace-nowrap px-3 py-4 text-sm text-subtle-light dark:text-subtle-dark">{res.status}</td>
+                      <td className="whitespace-nowrap px-3 py-4 text-sm text-subtle-light dark:text-subtle-dark">
+                        {res.status || "Unknown"}
+                      </td>
                       <td className="whitespace-nowrap py-4 pl-3 pr-6 text-right text-sm font-medium">
                         <button
                           onClick={() => openModal(res)}
@@ -98,58 +111,45 @@ const [results, setResults] = useState(
                 </tbody>
               </table>
             </div>
-
-            {/* Pagination
-            <footer className="mt-6 flex items-center justify-between">
-              <p className="text-sm text-subtle-light dark:text-subtle-dark">Page 1 of 5</p>
-              <div className="flex items-center gap-2">
-                <button className="flex h-9 w-9 items-center justify-center rounded-md border border-border-light dark:border-border-dark bg-white dark:bg-gray-800 text-text-light dark:text-text-dark hover:bg-gray-50 dark:hover:bg-gray-700 disabled:cursor-not-allowed disabled:opacity-50" disabled>
-                  <span className="material-symbols-outlined text-xl">chevron_left</span>
-                </button>
-                <button className="flex h-9 w-9 items-center justify-center rounded-md border border-border-light dark:border-border-dark bg-white dark:bg-gray-800 text-text-light dark:text-text-dark hover:bg-gray-50 dark:hover:bg-gray-700">
-                  <span className="material-symbols-outlined text-xl">chevron_right</span>
-                </button>
-              </div>
-            </footer> */}
           </div>
         </div>
       </main>
 
-  {/* Modal */}
-{modalOpen && selectedDoc && (
-  <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/50">
-    <div className="bg-white dark:bg-gray-900 rounded-lg w-11/12 max-w-3xl p-4 relative">
-      
-      {/* Modal Header */}
-      <div className="flex items-center justify-between mb-4">
-        <h2 className="text-lg font-semibold">{selectedDoc.pair}</h2>
-        <div className="flex items-center gap-2">
-          <button className="text-gray-500 hover:text-gray-800 p-1 rounded">
-            <span className="material-symbols-outlined text-base">download</span>
-          </button>
-          <button className="text-gray-500 hover:text-gray-800 p-1 rounded">
-            <span className="material-symbols-outlined text-base">open_in_full</span>
-          </button>
-          <button onClick={closeModal} className="text-gray-500 hover:text-gray-800 p-1 rounded">
-            <span className="material-symbols-outlined text-base">close</span>
-          </button>
-        </div>
-      </div>
+      {/* Modal */}
+      {modalOpen && selectedDoc && (
+        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/50">
+          <div className="bg-white dark:bg-gray-900 rounded-lg w-11/12 max-w-3xl p-4 relative">
 
-      {/* Modal Content */}
-      <div className="grid grid-cols-2 gap-4">
-        <div className="p-4 border rounded bg-gray-50 dark:bg-gray-800">
-          <h3 className="font-semibold mb-2">Document 1</h3>
-          <p>Report content of first document...</p>
+            {/* Modal Header */}
+            <div className="flex items-center justify-between mb-4">
+              <h2 className="text-lg font-semibold">{selectedDoc.pair}</h2>
+              <div className="flex items-center gap-2">
+                <button className="text-gray-500 hover:text-gray-800 p-1 rounded">
+                  <span className="material-symbols-outlined text-base">download</span>
+                </button>
+                <button className="text-gray-500 hover:text-gray-800 p-1 rounded">
+                  <span className="material-symbols-outlined text-base">open_in_full</span>
+                </button>
+                <button onClick={closeModal} className="text-gray-500 hover:text-gray-800 p-1 rounded">
+                  <span className="material-symbols-outlined text-base">close</span>
+                </button>
+              </div>
+            </div>
+
+            {/* Modal Content */}
+            <div className="grid grid-cols-2 gap-4">
+              <div className="p-4 border rounded bg-gray-50 dark:bg-gray-800">
+                <h3 className="font-semibold mb-2">Document 1</h3>
+                <p>Report content of first document...</p>
+              </div>
+              <div className="p-4 border rounded bg-gray-50 dark:bg-gray-800">
+                <h3 className="font-semibold mb-2">Document 2</h3>
+                <p>Report content of second document...</p>
+              </div>
+            </div>
+          </div>
         </div>
-        <div className="p-4 border rounded bg-gray-50 dark:bg-gray-800">
-          <h3 className="font-semibold mb-2">Document 2</h3>
-          <p>Report content of second document...</p>
-        </div>
-      </div>
-    </div>
-  </div>
-)}
+      )}
 
     </div>
   );

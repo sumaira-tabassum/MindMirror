@@ -57,15 +57,16 @@ export default function Home() {
     return true;
   }
 
-async function handleCompare() {
+  async function handleCompare() {
   if (!validateFiles()) return;
 
   try {
     setLoading(true);
 
     const formData = new FormData();
-    formData.append("file1", referenceFiles[0]);
-    formData.append("file2", comparisonFiles[0]);
+    formData.append("file1", referenceFiles[0]);          // Reference file
+    comparisonFiles.forEach(file => formData.append("file2", file)); // All comparison files
+    formData.append("model", dropdowns.model);
 
     const response = await fetch("http://localhost:5000/compare", {
       method: "POST",
@@ -74,23 +75,31 @@ async function handleCompare() {
 
     if (!response.ok) throw new Error("Comparison failed");
 
-    const result = await response.json();
+    const data = await response.json();
 
-    const formattedResult = {
-      pair: `${referenceFiles[0].name} vs ${comparisonFiles[0].name}`,
-      score: Number(result.similarityScore.toFixed(2)),
-      status: "Complete",
-      color:
-        result.similarityScore > 75
-          ? "red"
-          : result.similarityScore > 40
-          ? "amber"
-          : "green",
-    };
+    // Normalize results for one-to-one and reference-based
+    const resultsArray = [];
+    if (data.results && Array.isArray(data.results)) {
+      data.results.forEach(r => {
+        resultsArray.push({
+          pair: r.pair,
+          score: Number(r.similarity.toFixed(2)),
+          status: "Complete",
+          color: r.similarity > 75 ? "red" : r.similarity > 40 ? "amber" : "green",
+        });
+      });
+    } else if (data.similarity !== undefined) {
+      resultsArray.push({
+        pair: `${referenceFiles[0].name} vs ${comparisonFiles[0].name}`,
+        score: Number(data.similarity.toFixed(2)),
+        status: "Complete",
+        color: data.similarity > 75 ? "red" : data.similarity > 40 ? "amber" : "green",
+      });
+    }
 
-    setComparisonResult(formattedResult);  // ✅ save the result
-    setReadyToFetch(true);                 // ✅ show Fetch Results button
-    setShowNewComparison(true);            // ✅ show New Comparison button
+    setComparisonResult(resultsArray);   // ✅ save all results
+    setReadyToFetch(true);               // ✅ show Fetch Results button
+    setShowNewComparison(true);          // ✅ show New Comparison button
 
   } catch (error) {
     alert("Error while comparing documents");
@@ -100,10 +109,13 @@ async function handleCompare() {
   }
 }
 
+
   function handleFetchResults() {
-    if(!comparisonResult) return;
-    navigate("/results", {state:
-      {comparisonResult} });
+    if (!comparisonResult) return;
+    navigate("/results", {
+      state:
+        { comparisonResult }
+    });
   }
 
   function handleNewComparison() {
