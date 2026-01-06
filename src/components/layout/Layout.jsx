@@ -11,7 +11,7 @@ export default function Layout({ children, darkMode, setDarkMode }) {
   return (
     <div className="flex w-full h-screen bg-background-light dark:bg-background-dark relative">
       {/* Sidebar */}
-      <Sidebar sidebarOpen={sidebarOpen} setSidebarOpen={setSidebarOpen} />
+      <Sidebar sidebarOpen={sidebarOpen} setSidebarOpen={setSidebarOpen}   darkMode={darkMode}/>
 
       {/* Main content */}
       <div className="flex-1 flex flex-col">

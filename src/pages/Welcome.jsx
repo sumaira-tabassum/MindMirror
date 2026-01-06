@@ -1,23 +1,22 @@
 import React from "react";
 import { Button } from "@/components/ui/Button";
 import { useNavigate } from "react-router-dom";
-import Logo from "@/assets/favicon.svg";
+import LogoLight from "@/assets/LogoLight.svg";
+import LogoDark from "@/assets/LogoDark.svg";  
 
 export default function Welcome({ darkMode }) {
   const navigate = useNavigate();
 
   return (
     <div className="relative flex flex-col min-h-screen bg-background-light dark:bg-background-dark text-gray-900 dark:text-white px-4">
-      
-      {/* Top header */}
-      <header className="flex items-center justify-center py-6">
-        <div className="flex items-center gap-2">
-          <div className="w-8 h-8 flex items-center justify-center">
-            <img src={Logo} alt="MindMirror Logo" className="w-8 h-8" />
-          </div>
-          <span className="text-lg font-semibold">MindMirror</span>
-        </div>
-      </header>
+
+      {/* Top header
+      <div className="flex items-center justify-center gap-3">
+         <img src={Icon} alt="MindMirror Icon" className="h-8 md:h-8" />
+        <span className="text-4xl md:text-3xl font-bold text-gray-900 dark:text-white">
+          MindMirror
+        </span>
+      </div> */}
 
       {/* Background gradients */}
       <div className="absolute inset-0 z-0 pointer-events-none">
@@ -26,7 +25,13 @@ export default function Welcome({ darkMode }) {
       </div>
 
       {/* Main content */}
+       
       <main className="flex flex-1 flex-col items-center justify-center z-10 text-center max-w-xl mx-auto">
+       <img
+  src={darkMode ? LogoLight : LogoDark}
+  alt="MindMirror Icon"
+  className="h-20 md:h-40 mb-6"
+/>
         <h1 className="text-4xl md:text-5xl font-bold mb-4 leading-tight">
           Welcome to <span className="text-primary">MindMirror</span>
         </h1>

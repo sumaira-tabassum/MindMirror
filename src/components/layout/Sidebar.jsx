@@ -1,8 +1,11 @@
 import React from "react";
 import { cn } from "@/lib/utils";
 import { NavLink } from "react-router-dom";
+// import CompleteLogo from "@/assets/Logo_Dark.png";
+import IconLight from "@/assets/LogoLight.svg";
+import IconDark from "@/assets/LogoDark.svg";
 
-export default function Sidebar({ sidebarOpen, setSidebarOpen }) {
+export default function Sidebar({ sidebarOpen, setSidebarOpen, darkMode }) {
   return (
     <>
       {/* Mobile Overlay */}
@@ -27,9 +30,16 @@ export default function Sidebar({ sidebarOpen, setSidebarOpen }) {
         {/* ========================= */}
         <div className="p-4 flex-shrink-0 border-b border-slate-200 dark:border-slate-800">
           <div className="flex items-center justify-between mb-4">
-            <h1 className="text-xl font-bold text-slate-900 dark:text-slate-100">
-              MindMirror
-            </h1>
+            <div className="flex items-center gap-2">
+              <img
+                src={darkMode ? IconLight : IconDark}
+                alt="MindMirror Icon"
+                className="h-14 md:h-14"
+              />
+              <span className="text-2xl font-bold text-slate-900 dark:text-slate-100">
+                MindMirror
+              </span>
+            </div>
 
             {/* Close button (mobile only) */}
             <button
