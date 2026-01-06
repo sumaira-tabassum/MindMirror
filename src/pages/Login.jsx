@@ -21,7 +21,6 @@ export default function Login() {
 
   // Mock functions for demo (replace with real backend logic)
   const handleLogin = () => {
-    // Example: if email/password are non-empty, login success
     if (loginEmail && loginPassword) {
       navigate("/home");
     } else {
@@ -30,7 +29,6 @@ export default function Login() {
   };
 
   const handleSignup = () => {
-    // Basic validation
     if (!signupName || !signupEmail || !signupPassword) {
       alert("Please fill all fields");
       return;
@@ -39,21 +37,20 @@ export default function Login() {
       alert("Passwords do not match");
       return;
     }
-    // Successful signup
     setSignupSuccess(true);
   };
 
   return (
     <div className="w-full max-w-md mx-auto">
-      <div className="bg-white dark:bg-gray-900 rounded-xl shadow-sm border border-border-light dark:border-border-dark p-8 space-y-8">
+      <div className="bg-white dark:bg-slate-900 rounded-xl shadow-sm border border-slate-300 dark:border-slate-700 p-8 space-y-8">
 
         {/* Toggle Login/SignUp */}
         {!signupSuccess && (
-          <div className="flex p-1.5 bg-gray-100 dark:bg-gray-800 rounded-full">
+          <div className="flex p-1.5 bg-slate-100 dark:bg-slate-800 rounded-full">
             <button
               onClick={() => setIsLogin(true)}
               className={`flex-1 py-2.5 px-4 text-sm font-semibold rounded-full transition-colors ${
-                isLogin ? "bg-white dark:bg-gray-900" : "text-subtle-light dark:text-subtle-dark hover:bg-gray-200 dark:hover:bg-gray-700/50"
+                isLogin ? "bg-white dark:bg-slate-900 text-slate-900 dark:text-slate-100" : "text-slate-500 dark:text-slate-400 hover:bg-slate-200 dark:hover:bg-slate-700/50"
               }`}
             >
               Login
@@ -61,7 +58,7 @@ export default function Login() {
             <button
               onClick={() => setIsLogin(false)}
               className={`flex-1 py-2.5 px-4 text-sm font-medium rounded-full transition-colors ${
-                !isLogin ? "bg-white dark:bg-gray-900" : "text-subtle-light dark:text-subtle-dark hover:bg-gray-200 dark:hover:bg-gray-700/50"
+                !isLogin ? "bg-white dark:bg-slate-900 text-slate-900 dark:text-slate-100" : "text-slate-500 dark:text-slate-400 hover:bg-slate-200 dark:hover:bg-slate-700/50"
               }`}
             >
               Sign Up
@@ -79,14 +76,14 @@ export default function Login() {
               <div className="flex flex-col items-center space-y-2">
                 <button
                   onClick={handleLogin}
-                  className="w-full h-12 bg-primary text-white rounded-lg hover:bg-primary/90 transition-colors"
+                  className="w-full h-12 bg-slate-700 dark:bg-slate-800 text-slate-100 rounded-lg hover:bg-slate-600 dark:hover:bg-slate-700 transition-colors"
                 >
                   Login
                 </button>
-                <p className="text-xs text-subtle-light dark:text-subtle-dark">
+                <p className="text-xs text-slate-500 dark:text-slate-400">
                   Don't have an account?{" "}
                   <span
-                    className="text-primary cursor-pointer font-semibold"
+                    className="text-slate-700 dark:text-slate-300 cursor-pointer font-semibold"
                     onClick={() => setIsLogin(false)}
                   >
                     Sign Up
@@ -106,14 +103,14 @@ export default function Login() {
               <div className="flex flex-col items-center space-y-2">
                 <button
                   onClick={handleSignup}
-                  className="w-full h-12 bg-primary text-white rounded-lg hover:bg-primary/90 transition-colors"
+                  className="w-full h-12 bg-slate-700 dark:bg-slate-800 text-slate-100 rounded-lg hover:bg-slate-600 dark:hover:bg-slate-700 transition-colors"
                 >
                   Sign Up
                 </button>
-                <p className="text-xs text-subtle-light dark:text-subtle-dark">
+                <p className="text-xs text-slate-500 dark:text-slate-400">
                   Already have an account?{" "}
                   <span
-                    className="text-primary cursor-pointer font-semibold"
+                    className="text-slate-700 dark:text-slate-300 cursor-pointer font-semibold"
                     onClick={() => setIsLogin(true)}
                   >
                     Login
@@ -132,7 +129,7 @@ export default function Login() {
                   setIsLogin(true);
                   setSignupSuccess(false);
                 }}
-                className="w-full h-12 bg-primary text-white rounded-lg hover:bg-primary/90 transition-colors"
+                className="w-full h-12 bg-slate-700 dark:bg-slate-800 text-slate-100 rounded-lg hover:bg-slate-600 dark:hover:bg-slate-700 transition-colors"
               >
                 Go to Login
               </button>
@@ -152,17 +149,17 @@ function Input({ label, value, setValue, type = "text", placeholder, showToggle 
   return (
     <label className="flex flex-col">
       <p className="text-sm font-medium pb-2">{label}</p>
-      <div className="flex items-center border border-border-light dark:border-border-dark rounded-lg bg-background-light dark:bg-gray-800 focus-within:ring-2 focus-within:ring-primary/50">
+      <div className="flex items-center border border-slate-300 dark:border-slate-700 rounded-lg bg-white dark:bg-slate-800 focus-within:ring-2 focus-within:ring-slate-500/50">
         <input
           type={showToggle && show ? "text" : type}
           value={value}
           onChange={(e) => setValue(e.target.value)}
           placeholder={placeholder}
-          className="flex-1 bg-transparent text-text-light dark:text-text-dark px-4 py-2 h-12 text-base font-normal placeholder:text-subtle-light dark:placeholder:text-subtle-dark focus:outline-0"
+          className="flex-1 bg-transparent text-slate-900 dark:text-slate-100 px-4 py-2 h-12 text-base font-normal placeholder:text-slate-400 dark:placeholder:text-slate-500 focus:outline-0"
         />
         {showToggle && (
           <div
-            className="flex items-center justify-center pr-4 cursor-pointer text-subtle-light dark:text-subtle-dark"
+            className="flex items-center justify-center pr-4 cursor-pointer text-slate-500 dark:text-slate-400"
             onClick={() => setShow(!show)}
           >
             <span className="material-symbols-outlined text-xl">

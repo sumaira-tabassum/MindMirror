@@ -29,9 +29,6 @@ export default function Home() {
     resetAll
   } = useHomeState();
 
-  // const [referenceFiles, setReferenceFiles] = useState([]);
-  // const [comparisonFiles, setComparisonFiles] = useState([]);
-
   /* -------------------------------
      VALIDATION BASED ON MODE
   -------------------------------- */
@@ -58,64 +55,59 @@ export default function Home() {
   }
 
   async function handleCompare() {
-  if (!validateFiles()) return;
+    if (!validateFiles()) return;
 
-  try {
-    setLoading(true);
+    try {
+      setLoading(true);
 
-    const formData = new FormData();
-    formData.append("file1", referenceFiles[0]);          // Reference file
-    comparisonFiles.forEach(file => formData.append("file2", file)); // All comparison files
-    formData.append("model", dropdowns.model);
+      const formData = new FormData();
+      formData.append("file1", referenceFiles[0]);
+      comparisonFiles.forEach(file => formData.append("file2", file));
+      formData.append("model", dropdowns.model);
 
-    const response = await fetch("http://localhost:5000/compare", {
-      method: "POST",
-      body: formData,
-    });
+      const response = await fetch("http://localhost:5000/compare", {
+        method: "POST",
+        body: formData,
+      });
 
-    if (!response.ok) throw new Error("Comparison failed");
+      if (!response.ok) throw new Error("Comparison failed");
 
-    const data = await response.json();
+      const data = await response.json();
 
-    // Normalize results for one-to-one and reference-based
-    const resultsArray = [];
-    if (data.results && Array.isArray(data.results)) {
-      data.results.forEach(r => {
-        resultsArray.push({
-          pair: r.pair,
-          score: Number(r.similarity.toFixed(2)),
-          status: "Complete",
-          color: r.similarity > 75 ? "red" : r.similarity > 40 ? "amber" : "green",
+      const resultsArray = [];
+      if (data.results && Array.isArray(data.results)) {
+        data.results.forEach(r => {
+          resultsArray.push({
+            pair: r.pair,
+            score: Number(r.similarity.toFixed(2)),
+            status: "Complete",
+            color: r.similarity > 75 ? "red" : r.similarity > 40 ? "amber" : "green",
+          });
         });
-      });
-    } else if (data.similarity !== undefined) {
-      resultsArray.push({
-        pair: `${referenceFiles[0].name} vs ${comparisonFiles[0].name}`,
-        score: Number(data.similarity.toFixed(2)),
-        status: "Complete",
-        color: data.similarity > 75 ? "red" : data.similarity > 40 ? "amber" : "green",
-      });
+      } else if (data.similarity !== undefined) {
+        resultsArray.push({
+          pair: `${referenceFiles[0].name} vs ${comparisonFiles[0].name}`,
+          score: Number(data.similarity.toFixed(2)),
+          status: "Complete",
+          color: data.similarity > 75 ? "red" : data.similarity > 40 ? "amber" : "green",
+        });
+      }
+
+      setComparisonResult(resultsArray);
+      setReadyToFetch(true);
+      setShowNewComparison(true);
+
+    } catch (error) {
+      alert("Error while comparing documents");
+      console.error(error);
+    } finally {
+      setLoading(false);
     }
-
-    setComparisonResult(resultsArray);   // ✅ save all results
-    setReadyToFetch(true);               // ✅ show Fetch Results button
-    setShowNewComparison(true);          // ✅ show New Comparison button
-
-  } catch (error) {
-    alert("Error while comparing documents");
-    console.error(error);
-  } finally {
-    setLoading(false);
   }
-}
-
 
   function handleFetchResults() {
     if (!comparisonResult) return;
-    navigate("/results", {
-      state:
-        { comparisonResult }
-    });
+    navigate("/results", { state: { comparisonResult } });
   }
 
   function handleNewComparison() {
@@ -128,7 +120,7 @@ export default function Home() {
   }
 
   const canUpload = Boolean(dropdowns.mode) && Boolean(dropdowns.model);
-  // ✅ Step 2a: Determine if Compare button should be disabled
+
   const isCompareDisabled =
     !canUpload ||
     referenceFiles.length === 0 ||
@@ -155,28 +147,35 @@ export default function Home() {
 
   return (
     <div>
-      <h1 className="text-3xl font-bold mb-8">
+      <h1 className="text-3xl font-bold mb-8 text-slate-900 dark:text-slate-100">
         Compare your documents instantly
       </h1>
 
       {/* Dropdowns */}
       <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
-        {/* Comparison Mode Selection */}
-        <div className="relative">
-          <label className="block text-sm font-medium mb-1">Mode Selection</label>
 
-          {/* Selected box */}
+        {/* Mode Selection */}
+        <div className="relative">
+          <label className="block text-sm font-medium mb-1 text-slate-700 dark:text-slate-300">
+            Mode Selection
+          </label>
+
           <div
             onClick={() => setModeOpen(!modeOpen)}
-            className="flex items-center justify-between w-full p-2 rounded-md border bg-white cursor-pointer"
+            className="flex items-center justify-between w-full p-2 rounded-md border
+                       bg-white dark:bg-slate-800
+                       text-slate-900 dark:text-slate-100
+                       border-slate-300 dark:border-slate-700
+                       cursor-pointer"
           >
             <span>{dropdowns.mode || "Select Comparison Mode"}</span>
             <span className="material-symbols-outlined text-base">expand_more</span>
           </div>
 
-          {/* Dropdown options */}
           {modeOpen && (
-            <div className="absolute z-30 mt-1 w-full bg-white border rounded-md shadow-md">
+            <div className="absolute z-30 mt-1 w-full rounded-md border shadow-md
+                            bg-white dark:bg-slate-800
+                            border-slate-300 dark:border-slate-700">
               {[
                 {
                   name: "One-to-One Comparison",
@@ -189,28 +188,28 @@ export default function Home() {
               ].map((mode, index) => (
                 <div
                   key={index}
-                  className="flex items-center justify-between p-2 hover:bg-gray-100 cursor-pointer"
+                  className="flex items-center justify-between p-2
+                             hover:bg-slate-100 dark:hover:bg-slate-700
+                             cursor-pointer"
                 >
-                  {/* Text part (click to select) */}
                   <span
                     onClick={() => {
                       setDropdowns({ ...dropdowns, mode: mode.name });
-                      setModeOpen(false);       // Close dropdown
-                      setShowModeInfo(false);   // Hide info card if open
-                      setInfoMode(null);        // Clear infoMode
-                      setReferenceFiles([]);    // Reset uploaded files
+                      setModeOpen(false);
+                      setShowModeInfo(false);
+                      setInfoMode(null);
+                      setReferenceFiles([]);
                       setComparisonFiles([]);
                     }}
-                    className="flex-1"  // Important: take available space so info icon doesn't block
+                    className="flex-1"
                   >
                     {mode.name}
                   </span>
 
-                  {/* Info icon */}
                   <span
-                    className="material-symbols-outlined text-base cursor-pointer ml-2"
+                    className="material-symbols-outlined text-base ml-2 text-slate-500"
                     onClick={(e) => {
-                      e.stopPropagation(); // ✅ Prevent the click from affecting parent span
+                      e.stopPropagation();
                       if (infoMode === mode) {
                         setShowModeInfo(false);
                         setInfoMode(null);
@@ -230,39 +229,46 @@ export default function Home() {
 
         {/* Mode Info Card */}
         {showModeInfo && infoMode && (
-          <div className="absolute z-40 w-64 p-3 bg-white border rounded-md shadow-md mt-1">
-            <h3 className="font-semibold">{infoMode.name}</h3>
-            <p className="text-sm text-gray-600">{infoMode.description}</p>
+          <div className="absolute z-40 w-64 p-3 rounded-md border shadow-md
+                          bg-white dark:bg-slate-800
+                          border-slate-300 dark:border-slate-700">
+            <h3 className="font-semibold text-slate-900 dark:text-slate-100">
+              {infoMode.name}
+            </h3>
+            <p className="text-sm text-slate-600 dark:text-slate-400">
+              {infoMode.description}
+            </p>
           </div>
         )}
 
-
         {/* AI Model Selection */}
         <div className="relative">
-          <label className="block text-sm font-medium mb-1">
+          <label className="block text-sm font-medium mb-1 text-slate-700 dark:text-slate-300">
             AI Model Selection
           </label>
 
-          {/* Selected box */}
           <div
             onClick={() => setModelOpen(!modelOpen)}
-            className="flex items-center justify-between w-full p-2 rounded-md border bg-white cursor-pointer"
+            className="flex items-center justify-between w-full p-2 rounded-md border
+                       bg-white dark:bg-slate-800
+                       text-slate-900 dark:text-slate-100
+                       border-slate-300 dark:border-slate-700
+                       cursor-pointer"
           >
-            <span>
-              {dropdowns.model || "Select AI Model"}
-            </span>
-            <span className="material-symbols-outlined text-base">
-              expand_more
-            </span>
+            <span>{dropdowns.model || "Select AI Model"}</span>
+            <span className="material-symbols-outlined text-base">expand_more</span>
           </div>
-
           {/* Dropdown options */}
           {modelOpen && (
-            <div className="absolute z-30 mt-1 w-full bg-white border rounded-md shadow-md">
+            <div className="absolute z-30 mt-1 w-full rounded-md border shadow-md
+                            bg-white dark:bg-slate-800
+                            border-slate-300 dark:border-slate-700">
               {aiModels.map((model, index) => (
                 <div
                   key={index}
-                  className="flex items-center justify-between p-2 hover:bg-gray-100 cursor-pointer"
+                  className="flex items-center justify-between p-2
+                             hover:bg-slate-100 dark:hover:bg-slate-700
+                             cursor-pointer"
                 >
                   {/* Model name clickable to select */}
                   <span
@@ -278,9 +284,8 @@ export default function Home() {
 
                   {/* Info icon */}
                   <span
-                    className="material-symbols-outlined text-base cursor-pointer ml-2"
+                    className="material-symbols-outlined text-base cursor-pointer ml-2 text-slate-500 dark:text-slate-400"
                     onClick={() => {
-                      // toggle info card
                       if (infoModel === model) {
                         setShowModelInfo(false);
                         setInfoModel(null);
@@ -300,10 +305,14 @@ export default function Home() {
 
         {/* Info Card */}
         {showModelInfo && infoModel && (
-          <div className="absolute z-40 w-64 p-3 bg-white border rounded-md shadow-md mt-1">
-            <h3 className="font-semibold">{infoModel.name}</h3>
-            <p className="text-sm text-gray-600">{infoModel.description}</p>
-            <p className="text-xs font-medium text-gray-500 mt-1">Level: {infoModel.level}</p>
+          <div className="absolute z-40 w-64 p-3 rounded-md border shadow-md mt-1
+                          bg-white dark:bg-slate-800
+                          border-slate-300 dark:border-slate-700">
+            <h3 className="font-semibold text-slate-900 dark:text-slate-100">{infoModel.name}</h3>
+            <p className="text-sm text-slate-600 dark:text-slate-400">{infoModel.description}</p>
+            <p className="text-xs font-medium text-slate-500 dark:text-slate-400 mt-1">
+              Level: {infoModel.level}
+            </p>
           </div>
         )}
 
@@ -338,18 +347,20 @@ export default function Home() {
       <div className="flex flex-col items-center gap-4">
         <button
           onClick={readyToFetch ? handleFetchResults : handleCompare}
-          disabled={isCompareDisabled} // ✅ use the new variable
-          className={`px-8 py-3 rounded-lg font-bold text-white bg-primary
-              ${isCompareDisabled ? "opacity-50 cursor-not-allowed" : "hover:bg-primary/90"}`}
+          disabled={isCompareDisabled}
+          className={`px-8 py-3 rounded-lg font-bold text-slate-100 bg-slate-700
+                      ${isCompareDisabled
+                        ? "opacity-50 cursor-not-allowed"
+                        : "hover:bg-slate-600 dark:hover:bg-slate-600"}`}
         >
           {loading ? "Processing..." : readyToFetch ? "Fetch Results" : "Compare"}
         </button>
 
-
         {showNewComparison && (
           <button
             onClick={handleNewComparison}
-            className="px-8 py-3 rounded-lg font-bold text-white bg-primary"
+            className="px-8 py-3 rounded-lg font-bold text-slate-100 bg-slate-700
+                       hover:bg-slate-600 dark:hover:bg-slate-600"
           >
             New Comparison
           </button>
@@ -365,11 +376,14 @@ export default function Home() {
 function Dropdown({ label, value, onChange, options, placeholder }) {
   return (
     <div>
-      <label className="block text-sm font-medium mb-1">{label}</label>
+      <label className="block text-sm font-medium mb-1 text-slate-700 dark:text-slate-300">
+        {label}
+      </label>
       <select
         value={value}
         onChange={onChange}
-        className="w-full p-2 rounded-md border"
+        className="w-full p-2 rounded-md border border-slate-300 dark:border-slate-700
+                   bg-white dark:bg-slate-800 text-slate-900 dark:text-slate-100"
       >
         <option value="">{placeholder}</option>
         {options.map(opt => (
@@ -384,7 +398,6 @@ function Dropdown({ label, value, onChange, options, placeholder }) {
    UPLOAD CARD
 -------------------------------- */
 function UploadCard({ title, files, setFiles, allowMultiple, disabled }) {
-
   function processFiles(selectedFiles) {
     if (disabled) {
       alert("Please select Mode and AI Model first.");
@@ -413,7 +426,7 @@ function UploadCard({ title, files, setFiles, allowMultiple, disabled }) {
 
   function handleInputChange(e) {
     processFiles(e.target.files);
-    e.target.value = ""; // ⭐ reset input (smooth UX)
+    e.target.value = "";
   }
 
   function handleDrop(e) {
@@ -425,14 +438,15 @@ function UploadCard({ title, files, setFiles, allowMultiple, disabled }) {
     <div
       onDragOver={(e) => e.preventDefault()}
       onDrop={handleDrop}
-      className={`flex flex-col gap-3 rounded-xl border-2 border-dashed border-mint-leaf-300
-             dark:border-mint-leaf-700 bg-mint-leaf-50 dark:bg-mint-leaf-900/30
-             p-6 text-center transition-transform duration-200
-      hover:scale-[1.03] hover:shadow-lg dark:hover:bg-slate-800/50
-             ${disabled ? "opacity-50 cursor-not-allowed" : ""}`}
-
+      className={`flex flex-col gap-3 rounded-xl border-2 border-dashed
+                 border-slate-300 dark:border-slate-700
+                 bg-white dark:bg-slate-800
+                 p-6 text-center transition-transform duration-200
+                 hover:scale-[1.03] hover:shadow-lg
+                 hover:bg-slate-100 dark:hover:bg-slate-700
+                 ${disabled ? "opacity-50 cursor-not-allowed" : ""}`}
     >
-      <p className="text-lg font-semibold">{title}</p>
+      <p className="text-lg font-semibold text-slate-900 dark:text-slate-100">{title}</p>
 
       <input
         type="file"
@@ -444,21 +458,19 @@ function UploadCard({ title, files, setFiles, allowMultiple, disabled }) {
       />
 
       <label htmlFor={title} className="cursor-pointer flex flex-col items-center gap-2">
-        <span className="material-symbols-outlined text-4xl text-primary">
+        <span className="material-symbols-outlined text-4xl text-slate-700 dark:text-slate-100">
           upload_file
         </span>
 
-        {/* 👇 RESTORED TEXT */}
-        <p className="text-sm font-medium text-primary">
+        <p className="text-sm font-medium text-slate-700 dark:text-slate-100">
           Drag & drop or click to select
         </p>
 
-        <p className="text-xs text-slate-500">
+        <p className="text-xs text-slate-500 dark:text-slate-400">
           PDF, DOCX, TXT up to 25MB
         </p>
       </label>
 
-      {/* Uploaded Files */}
       {files.length > 0 && (
         <div className="mt-3 space-y-2 text-left">
           {files.map(file => (
@@ -478,20 +490,20 @@ function FileItem({ file }) {
 
   const icon =
     ext === "pdf" ? "picture_as_pdf" :
-      ext === "doc" || ext === "docx" ? "description" :
-        "article";
+    ext === "doc" || ext === "docx" ? "description" :
+    "article";
 
   const color =
     ext === "pdf" ? "text-red-500" :
-      ext === "doc" || ext === "docx" ? "text-blue-500" :
-        "text-gray-500";
+    ext === "doc" || ext === "docx" ? "text-blue-500" :
+    "text-slate-500 dark:text-slate-400";
 
   return (
     <div className="flex items-center gap-3 text-sm font-medium">
       <span className={`material-symbols-outlined ${color}`}>
         {icon}
       </span>
-      <span className="truncate">{file.name}</span>
+      <span className="truncate text-slate-900 dark:text-slate-100">{file.name}</span>
     </div>
   );
 }

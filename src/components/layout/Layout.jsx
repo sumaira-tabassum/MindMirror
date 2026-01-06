@@ -1,8 +1,9 @@
 import React, { useState } from "react";
 import Sidebar from "./Sidebar";
 import Navbar from "./Navbar";
+import { Outlet } from "react-router-dom";
 
-export default function Layout({ children }) {
+export default function Layout({ children, darkMode, setDarkMode }) {
   const [sidebarOpen, setSidebarOpen] = useState(false);
 
   const toggleSidebar = () => setSidebarOpen(!sidebarOpen);
@@ -14,10 +15,14 @@ export default function Layout({ children }) {
 
       {/* Main content */}
       <div className="flex-1 flex flex-col">
-        {/* Navbar fixed at top */}
-        <Navbar toggleSidebar={toggleSidebar} />
+        {/* Navbar */}
+        <Navbar
+          toggleSidebar={toggleSidebar}
+          darkMode={darkMode}
+          setDarkMode={setDarkMode}
+        />
 
-        {/* Page content with margin-top to prevent overlap */}
+        {/* Page content */}
         <main className="flex-1 min-h-0 mt-16 overflow-y-auto p-4 sm:p-6 md:p-8">
           <div className="max-w-7xl mx-auto">{children}</div>
         </main>

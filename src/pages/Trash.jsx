@@ -51,14 +51,14 @@ export default function Trash() {
               search
             </span>
             <input
-              className="w-full pl-10 pr-4 h-11 rounded-xl bg-background-light dark:bg-background-dark focus:ring-2 focus:ring-primary/20 text-sm"
+              className="w-full pl-10 pr-4 h-11 rounded-xl bg-white dark:bg-slate-800 text-slate-900 dark:text-white placeholder-slate-400 focus:ring-2 focus:ring-primary/20"
               placeholder="Search deleted files by name..."
             />
           </div>
         </div>
 
         <div className="flex gap-3">
-          <button className="flex items-center gap-2 h-10 px-5 rounded-xl bg-primary text-white text-sm font-bold shadow-lg shadow-primary/20 hover:scale-95 transition">
+          <button className="flex items-center gap-2 h-10 px-5 rounded-xl border border-slate-200 dark:border-slate-600 text-slate-700 dark:text-slate-200 hover:text-red-500 hover:border-red-300 transition">
             <span className="material-symbols-outlined text-lg">restore</span>
             Restore Selected
           </button>
@@ -78,19 +78,19 @@ export default function Trash() {
                 <th className="p-5 w-12">
                   <input type="checkbox" />
                 </th>
-                <th className="p-5 text-xs font-bold text-slate-500 uppercase">
+                <th className="p-5 text-xs font-bold text-slate-500 dark:text-slate-400 uppercase">
                   File Name
                 </th>
-                <th className="p-5 hidden md:table-cell text-xs font-bold text-slate-500 uppercase">
+                <th className="p-5 hidden md:table-cell text-xs font-bold text-slate-500 dark:text-slate-400 uppercase">
                   Original Location
                 </th>
-                <th className="p-5 hidden lg:table-cell text-xs font-bold text-slate-500 uppercase">
+                <th className="p-5 hidden lg:table-cell text-xs font-bold text-slate-500 dark:text-slate-400 uppercase">
                   Deletion Date
                 </th>
-                <th className="p-5 text-xs font-bold text-slate-500 uppercase">
+                <th className="p-5 text-xs font-bold text-slate-500 dark:text-slate-400 uppercase">
                   Status
                 </th>
-                <th className="p-5 text-xs font-bold text-slate-500 uppercase text-right">
+                <th className="p-5 text-xs font-bold text-slate-500 dark:text-slate-400 uppercase text-right">
                   Actions
                 </th>
               </tr>
@@ -151,19 +151,19 @@ function TrashRow({ name, location, date, status, icon, color }) {
       </td>
 
       <td className="p-5">
-        <span className="text-xs font-semibold text-orange-600">
+        <span className="text-xs font-semibold text-orange-600 dark:text-orange-400">
           {status}
         </span>
       </td>
 
       <td className="p-5 text-right">
         <div className="flex justify-end gap-2">
-          <button className="text-primary hover:scale-110 transition">
+          <button className="text-primary dark:text-primary hover:scale-110 transition">
             <span className="material-symbols-outlined">
               restore_from_trash
             </span>
           </button>
-          <button className="text-red-500 hover:scale-110 transition">
+          <button className="text-red-500 dark:text-red-400 hover:scale-110 transition">
             <span className="material-symbols-outlined">
               delete_forever
             </span>

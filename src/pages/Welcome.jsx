@@ -3,8 +3,9 @@ import { Button } from "@/components/ui/Button";
 import { useNavigate } from "react-router-dom";
 import Logo from "@/assets/favicon.svg";
 
-export default function Welcome() {
+export default function Welcome({ darkMode }) {
   const navigate = useNavigate();
+
   return (
     <div className="relative flex flex-col min-h-screen bg-background-light dark:bg-background-dark text-gray-900 dark:text-white px-4">
       
@@ -12,10 +13,8 @@ export default function Welcome() {
       <header className="flex items-center justify-center py-6">
         <div className="flex items-center gap-2">
           <div className="w-8 h-8 flex items-center justify-center">
-  <img src={Logo} alt="MindMirror Logo" className="w-8 h-8" />
-</div>
-
-
+            <img src={Logo} alt="MindMirror Logo" className="w-8 h-8" />
+          </div>
           <span className="text-lg font-semibold">MindMirror</span>
         </div>
       </header>
@@ -37,7 +36,6 @@ export default function Welcome() {
 
         {/* Buttons */}
         <div className="flex flex-col sm:flex-row gap-4 w-full max-w-sm">
-          {/* Go to Login/Signup */}
           <Button
             className="w-full min-w-[84px]"
             variant="default"
@@ -46,7 +44,6 @@ export default function Welcome() {
             Get Started
           </Button>
 
-          {/* Use App Without Login */}
           <Button
             className="w-full min-w-[84px]"
             variant="secondary"

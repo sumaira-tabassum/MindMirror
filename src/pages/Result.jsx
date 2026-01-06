@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState } from "react"; 
 import Navbar from "../components/layout/Navbar";
 import { useNavigate, useLocation } from "react-router-dom";
 
@@ -6,7 +6,7 @@ export default function Results() {
   const navigate = useNavigate();
   const location = useLocation();
 
-  // Initialize results state (handle array or single object)
+  // Initialize results state
   const initialResults = Array.isArray(location.state?.comparisonResult)
     ? location.state.comparisonResult
     : location.state?.comparisonResult
@@ -43,20 +43,22 @@ export default function Results() {
   };
 
   return (
-    <div className="flex flex-col min-h-screen bg-background-light dark:bg-background-dark text-text-light dark:text-text-dark">
-      <Navbar toggleSidebar={() => { }} />
+    <div className="flex flex-col min-h-screen bg-white dark:bg-slate-900 text-slate-900 dark:text-slate-100">
+      {/* <Navbar toggleSidebar={() => { }} /> */}
 
       {/* Top buttons */}
       <div className="flex justify-between items-center px-6 pt-2">
         <button
           onClick={() => navigate("/home")}
-          className="flex items-center gap-2 bg-gray-900 text-white px-4 py-2 rounded-lg text-sm font-medium hover:bg-gray-800 transition-colors"
+          className="flex items-center gap-2 bg-slate-700 dark:bg-slate-800 text-slate-100 px-4 py-2 rounded-lg text-sm font-medium
+                     hover:bg-slate-600 dark:hover:bg-slate-700 transition-colors"
         >
           <span className="material-symbols-outlined text-lg">arrow_back</span>
           Back to Homepage
         </button>
 
-        <button className="flex items-center gap-2 bg-primary text-white px-4 py-2 rounded-lg text-sm font-medium hover:bg-primary/90 transition-colors">
+        <button className="flex items-center gap-2 bg-slate-700 dark:bg-slate-800 text-slate-100 px-4 py-2 rounded-lg text-sm font-medium
+                           hover:bg-slate-600 dark:hover:bg-slate-700 transition-colors">
           <span className="material-symbols-outlined text-lg">download</span>
           Export Report
         </button>
@@ -65,14 +67,14 @@ export default function Results() {
       {/* Main Table */}
       <main className="flex-1 p-6 lg:p-8 pt-4">
         <div className="mx-auto w-full max-w-7xl">
-          <h1 className="text-2xl font-bold tracking-tight text-text-light dark:text-text-dark mb-6">
+          <h1 className="text-2xl font-bold tracking-tight mb-6">
             Comparison Results
           </h1>
 
-          <div className="overflow-hidden rounded-xl border border-border-light dark:border-border-dark bg-white dark:bg-gray-900 shadow-sm">
+          <div className="overflow-hidden rounded-xl border border-slate-300 dark:border-slate-700 bg-white dark:bg-slate-800 shadow-sm">
             <div className="overflow-x-auto">
-              <table className="min-w-full divide-y divide-border-light dark:divide-border-dark">
-                <thead className="bg-gray-50 dark:bg-gray-900/50">
+              <table className="min-w-full divide-y divide-slate-300 dark:divide-slate-700">
+                <thead className="bg-slate-50 dark:bg-slate-900/50">
                   <tr>
                     <th className="py-3.5 pl-6 pr-3 text-left text-sm font-semibold">Document Pair</th>
                     <th className="px-3 py-3.5 text-left text-sm font-semibold">Similarity Score</th>
@@ -81,7 +83,7 @@ export default function Results() {
                   </tr>
                 </thead>
 
-                <tbody className="divide-y divide-border-light dark:divide-border-dark">
+                <tbody className="divide-y divide-slate-300 dark:divide-slate-700">
                   {results.map((res, idx) => (
                     <tr key={idx}>
                       <td className="whitespace-nowrap py-4 pl-6 pr-3 text-sm font-medium">{res.pair}</td>
@@ -91,16 +93,18 @@ export default function Results() {
                             {res.score.toFixed(2)}%
                           </span>
                         ) : (
-                          <span className="text-gray-500">N/A</span>
+                          <span className="text-slate-500 dark:text-slate-400">N/A</span>
                         )}
                       </td>
-                      <td className="whitespace-nowrap px-3 py-4 text-sm text-subtle-light dark:text-subtle-dark">
+                      <td className="whitespace-nowrap px-3 py-4 text-sm text-slate-700 dark:text-slate-400">
                         {res.status || "Unknown"}
                       </td>
                       <td className="whitespace-nowrap py-4 pl-3 pr-6 text-right text-sm font-medium">
                         <button
                           onClick={() => openModal(res)}
-                          className={`rounded-md bg-primary px-3 py-1.5 text-sm font-medium text-white hover:bg-primary/90 transition-colors ${res.disabled ? "cursor-not-allowed opacity-50" : ""}`}
+                          className={`rounded-md px-3 py-1.5 text-sm font-medium text-slate-100
+                                     bg-slate-700 dark:bg-slate-800 hover:bg-slate-600 dark:hover:bg-slate-700
+                                     transition-colors ${res.disabled ? "cursor-not-allowed opacity-50" : ""}`}
                           disabled={res.disabled}
                         >
                           View Details
@@ -118,19 +122,19 @@ export default function Results() {
       {/* Modal */}
       {modalOpen && selectedDoc && (
         <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/50">
-          <div className="bg-white dark:bg-gray-900 rounded-lg w-11/12 max-w-3xl p-4 relative">
+          <div className="bg-white dark:bg-slate-800 rounded-lg w-11/12 max-w-3xl p-4 relative">
 
             {/* Modal Header */}
             <div className="flex items-center justify-between mb-4">
-              <h2 className="text-lg font-semibold">{selectedDoc.pair}</h2>
+              <h2 className="text-lg font-semibold text-slate-900 dark:text-slate-100">{selectedDoc.pair}</h2>
               <div className="flex items-center gap-2">
-                <button className="text-gray-500 hover:text-gray-800 p-1 rounded">
+                <button className="text-slate-500 dark:text-slate-400 hover:text-slate-800 dark:hover:text-slate-100 p-1 rounded">
                   <span className="material-symbols-outlined text-base">download</span>
                 </button>
-                <button className="text-gray-500 hover:text-gray-800 p-1 rounded">
+                <button className="text-slate-500 dark:text-slate-400 hover:text-slate-800 dark:hover:text-slate-100 p-1 rounded">
                   <span className="material-symbols-outlined text-base">open_in_full</span>
                 </button>
-                <button onClick={closeModal} className="text-gray-500 hover:text-gray-800 p-1 rounded">
+                <button onClick={closeModal} className="text-slate-500 dark:text-slate-400 hover:text-slate-800 dark:hover:text-slate-100 p-1 rounded">
                   <span className="material-symbols-outlined text-base">close</span>
                 </button>
               </div>
@@ -138,11 +142,11 @@ export default function Results() {
 
             {/* Modal Content */}
             <div className="grid grid-cols-2 gap-4">
-              <div className="p-4 border rounded bg-gray-50 dark:bg-gray-800">
+              <div className="p-4 border rounded bg-slate-50 dark:bg-slate-700">
                 <h3 className="font-semibold mb-2">Document 1</h3>
                 <p>Report content of first document...</p>
               </div>
-              <div className="p-4 border rounded bg-gray-50 dark:bg-gray-800">
+              <div className="p-4 border rounded bg-slate-50 dark:bg-slate-700">
                 <h3 className="font-semibold mb-2">Document 2</h3>
                 <p>Report content of second document...</p>
               </div>

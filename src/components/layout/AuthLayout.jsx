@@ -1,11 +1,12 @@
 // src/components/layout/AuthLayout.jsx
 import React from "react";
 
-export default function AuthLayout({ children }) {
+export default function AuthLayout({ children, darkMode }) {
   return (
-    <div className="min-h-screen flex flex-col bg-background-light dark:bg-background-dark text-text-light dark:text-text-dark">
-
-      {/* Header / Navbar */}
+    <div
+      className={`min-h-screen flex flex-col bg-background-light dark:bg-background-dark text-text-light dark:text-text-dark`}
+    >
+      {/* Header */}
       <header className="flex items-center justify-between h-20 w-full px-6 lg:px-12 border-b border-border-light dark:border-border-dark">
         {/* Left: Logo / App Name */}
         <h1 className="text-2xl font-bold tracking-tight">MindMirror</h1>

@@ -145,10 +145,10 @@ function ComparisonCard({
           <span className={`text-xs font-medium text-${statusColor}-600 dark:text-${statusColor}-400`}>
             {status}
           </span>
-          <span className="text-xs text-slate-400">• {time}</span>
+          <span className="text-xs text-slate-400 dark:text-slate-400">• {time}</span>
         </div>
 
-        <button className="text-slate-400 hover:text-slate-600">
+        <button className="text-slate-400 hover:text-slate-600 dark:hover:text-slate-300">
           <span className="material-symbols-outlined text-xl">more_horiz</span>
         </button>
       </div>
@@ -170,11 +170,11 @@ function ComparisonCard({
           <div
             className={`flex items-center justify-center w-14 h-14 rounded-full border-4 border-${scoreColor}-500/20 bg-${scoreColor}-500/10`}
           >
-            <span className={`text-sm font-bold text-${scoreColor}-600`}>
+            <span className={`text-sm font-bold text-${scoreColor}-600 dark:text-${scoreColor}-500`}>
               {score}
             </span>
           </div>
-          <span className="text-[10px] text-slate-400 mt-1">Match</span>
+          <span className="text-[10px] text-slate-400 dark:text-slate-400 mt-1">Match</span>
         </div>
       </div>
 
@@ -197,7 +197,7 @@ function ComparisonCard({
 function FileItem({ icon, name, bold }) {
   return (
     <div className="flex items-center gap-2 truncate">
-      <span className={`material-symbols-outlined text-slate-400 text-lg`}>
+      <span className="material-symbols-outlined text-slate-400 dark:text-slate-400 text-lg">
         {icon}
       </span>
       <span
@@ -224,10 +224,10 @@ function ProcessingCard() {
             <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-primary opacity-75"></span>
             <span className="relative inline-flex rounded-full h-2 w-2 bg-primary"></span>
           </span>
-          <span className="text-xs font-medium text-primary">Processing...</span>
+          <span className="text-xs font-medium text-primary dark:text-primary">Processing...</span>
         </div>
 
-        <button className="text-slate-400 hover:text-slate-600">
+        <button className="text-slate-400 hover:text-slate-600 dark:hover:text-slate-300">
           <span className="material-symbols-outlined text-xl">more_horiz</span>
         </button>
       </div>
@@ -237,7 +237,7 @@ function ProcessingCard() {
         <div className="flex-1 space-y-2">
           <FileItem icon="image" name="Scan_0041.png" bold />
           <div className="pl-1">
-            <span className="material-symbols-outlined text-slate-400 text-base rotate-90 block">
+            <span className="material-symbols-outlined text-slate-400 dark:text-slate-400 text-base rotate-90 block">
               sync_alt
             </span>
           </div>
@@ -246,11 +246,11 @@ function ProcessingCard() {
 
         <div className="flex flex-col items-center">
           <div className="flex items-center justify-center w-14 h-14 rounded-full border-4 border-slate-200 dark:border-slate-700 bg-slate-100 dark:bg-slate-800">
-            <span className="material-symbols-outlined text-slate-400 animate-spin">
+            <span className="material-symbols-outlined text-slate-400 dark:text-slate-400 animate-spin">
               progress_activity
             </span>
           </div>
-          <span className="text-[10px] text-slate-400 mt-1">Wait</span>
+          <span className="text-[10px] text-slate-400 dark:text-slate-400 mt-1">Wait</span>
         </div>
       </div>
 
